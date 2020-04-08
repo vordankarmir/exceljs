@@ -53,11 +53,6 @@
     "preversion": "npm run clean && npm run build && npm run test:all && npm run test:dist",
     "postversion": "git push --no-verify && git push --tags --no-verify"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.js": [
       "prettier-eslint --write",

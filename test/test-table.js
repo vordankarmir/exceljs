@@ -54,6 +54,7 @@ ws.addTable({
       style: {font: {bold: true, name: 'Comic Sans MS'}},
     },
   ],
+  // eslint-disable-next-line no-mixed-operators
   rows: words.map((word, i) => [new Date(+today + 86400 * i), i, word]),
 });
 

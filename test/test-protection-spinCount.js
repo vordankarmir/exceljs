@@ -41,12 +41,14 @@ async function save() {
     const value = values[index];
 
     stopwatch.start();
+    // eslint-disable-next-line no-await-in-loop
     await ws.protect(password, {spinCount: value});
     console.log(
       `Protection Time [spinCount ${value}]:`,
       stopwatch.microseconds
     );
 
+    // eslint-disable-next-line no-await-in-loop
     await wb.xlsx.writeFile(`${index + 2}-${filename}`);
   }
 }

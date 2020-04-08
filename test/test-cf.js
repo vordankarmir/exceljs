@@ -39,7 +39,9 @@ function addDateTable(ws, ref) {
   const now = Date.now();
   const today = now - (now % DAY);
   let dt = new Date(today);
+  // eslint-disable-next-line no-mixed-operators
   const sow = today - (dt.getDay() - 1) * DAY;
+  // eslint-disable-next-line no-mixed-operators
   const som = sow - 28 * DAY;
   dt = new Date(som);
 

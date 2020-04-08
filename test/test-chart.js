@@ -12,6 +12,7 @@ const today = now - (now % 86400000);
 const getRows = () => {
   const rows = [];
   for (let i = 0; i < 20; i++) {
+    // eslint-disable-next-line no-mixed-operators
     rows.push([new Date(today + 86400000 * i), Math.random() * 10]);
   }
   return rows;

@@ -18,7 +18,7 @@ const runs = 3;
 
         let worksheetCount = 0;
         let rowCount = 0;
-        wb.on('worksheet', (worksheet) => {
+        wb.on('worksheet', worksheet => {
           worksheetCount += 1;
           console.log(`Reading worksheet ${worksheetCount}`);
           worksheet.on('row', () => {
