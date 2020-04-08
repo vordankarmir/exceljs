@@ -1,4 +1,4 @@
-const Excel = require('../lib/exceljs.nodejs.js');
+const Excel = require('../lib/exceljs.js');
 const HrStopwatch = require('./utils/hr-stopwatch');
 
 const [, , filename, password] = process.argv;
@@ -27,6 +27,6 @@ async function save() {
   console.log('Time taken:', stopwatch.microseconds);
 }
 
-save().catch(error => {
+save().catch((error) => {
   console.log(error.message);
 });

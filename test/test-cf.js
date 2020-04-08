@@ -1,4 +1,4 @@
-const Excel = require('../lib/exceljs.nodejs.js');
+const Excel = require('../lib/exceljs.js');
 const Range = require('../lib/doc/range');
 
 const HrStopwatch = require('./utils/hr-stopwatch');
@@ -654,6 +654,6 @@ wb.xlsx
     console.log('Done.');
     console.log('Time taken:', micros);
   })
-  .catch(error => {
+  .catch((error) => {
     console.log(error.message);
   });

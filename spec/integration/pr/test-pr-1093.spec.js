@@ -2,9 +2,9 @@ const proxyquire = require('proxyquire');
 const fs = require('fs');
 const path = require('path');
 
-const ExcelJS = proxyquire('../../../lib/exceljs.nodejs.js', {
+const ExcelJS = proxyquire('../../../lib/exceljs.js', {
   tmp: {
-    file: cb => {
+    file: (cb) => {
       setTimeout(() => {
         cb(new Error('the error'));
       }, 50);
@@ -15,7 +15,7 @@ const ExcelJS = proxyquire('../../../lib/exceljs.nodejs.js', {
 
 // todo Disabled until we drop node 8, since proxyquire breaks readable-streams
 describe.skip('pr 1093', () => {
-  it('Should fail with error', done => {
+  it('Should fail with error', (done) => {
     const stream = fs.createReadStream(
       path.join(__dirname, '../data/test-pr-1093.xlsx')
     );
@@ -28,6 +28,6 @@ describe.skip('pr 1093', () => {
     });
 
     wb.on('end', () => done(new Error('unreachable')));
-    wb.on('error', e => e.message === 'the error' && done());
+    wb.on('error', (e) => e.message === 'the error' && done());
   });
 });

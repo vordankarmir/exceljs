@@ -79,7 +79,7 @@ module.exports = function(grunt) {
       //       ext: '.js',
       //     },
       //     {
-      //       './dist/es3/index.js': ['./build/lib/exceljs.nodejs.js'],
+      //       './dist/es3/index.js': ['./build/lib/exceljs.js'],
       //     }
       //   ],
       // },
@@ -89,7 +89,7 @@ module.exports = function(grunt) {
       dist: {
         files: [
           {expand: true, src: ['**'], cwd: './build/lib', dest: './dist/es5'},
-          {src: './build/lib/exceljs.nodejs.js', dest: './dist/es5/index.js'},
+          {src: './build/lib/exceljs.js', dest: './dist/es5/index.js'},
           {src: './LICENSE', dest: './dist/LICENSE'},
         ],
       },

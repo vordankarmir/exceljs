@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const ExcelJS = require('./lib/exceljs.nodejs.js');
+const ExcelJS = require('./lib/exceljs.js');
 
 const runs = 3;
 
@@ -18,7 +18,7 @@ const runs = 3;
 
         let worksheetCount = 0;
         let rowCount = 0;
-        wb.on('worksheet', worksheet => {
+        wb.on('worksheet', (worksheet) => {
           worksheetCount += 1;
           console.log(`Reading worksheet ${worksheetCount}`);
           worksheet.on('row', () => {
