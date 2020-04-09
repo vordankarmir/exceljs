@@ -1,6 +1,6 @@
 const HrStopwatch = require('./utils/hr-stopwatch');
 
-const Workbook = require('../lib/doc/workbook');
+const Workbook = require('../lib/data/workbook');
 
 const filename = process.argv[2];
 
@@ -24,6 +24,6 @@ wb.xlsx
     console.log('Done.');
     console.log('Time taken:', micros);
   })
-  .catch(error => {
+  .catch((error) => {
     console.log(error.message);
   });

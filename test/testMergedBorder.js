@@ -1,4 +1,4 @@
-const Workbook = require('../lib/doc/workbook');
+const Workbook = require('../lib/data/workbook');
 
 const filename = process.argv[2];
 
@@ -42,6 +42,6 @@ wb.xlsx
   .then(() => {
     console.log('Done.');
   })
-  .catch(error => {
+  .catch((error) => {
     console.log(error.message);
   });
