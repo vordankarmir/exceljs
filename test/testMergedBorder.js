@@ -1,4 +1,4 @@
-const Workbook = require('../lib/data/workbook');
+const Workbook = require("../lib/document/workbook");
 
 const filename = process.argv[2];
 

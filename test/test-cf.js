@@ -1,7 +1,7 @@
-const Excel = require('../lib/exceljs.js');
-const Range = require('../lib/data/range');
+const Excel = require("../lib/exceljs.js");
+const Range = require("../lib/document/range");
 
-const HrStopwatch = require('./utils/hr-stopwatch');
+const HrStopwatch = require("./utils/hr-stopwatch");
 
 const [, , filename] = process.argv;
 
@@ -9,7 +9,7 @@ const wb = new Excel.Workbook();
 
 function addTable(ws, ref) {
   const range = new Range(ref);
-  ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].forEach(
+  ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].forEach(
     (day, index) => {
       ws.getCell(range.top, range.left + index).value = day;
     }
@@ -25,13 +25,13 @@ function addTable(ws, ref) {
 function addDateTable(ws, ref) {
   const range = new Range(ref);
   [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
   ].forEach((day, index) => {
     ws.getCell(range.top, range.left + index).value = day;
   });
@@ -49,7 +49,7 @@ function addDateTable(ws, ref) {
     for (let j = 0; j < 7; j++) {
       const cell = ws.getCell(range.top + i, range.left + j);
       cell.value = dt;
-      cell.numFmt = 'DD MMM';
+      cell.numFmt = "DD MMM";
       dt = new Date(dt.getTime() + DAY);
     }
   }
@@ -57,39 +57,47 @@ function addDateTable(ws, ref) {
 
 // ============================================================================
 // Expression
-const expressionWS = wb.addWorksheet('Formula');
+const expressionWS = wb.addWorksheet("Formula");
 
-addTable(expressionWS, 'A1:E7');
+addTable(expressionWS, "A1:E7");
 expressionWS.addConditionalFormatting({
-  ref: 'A1:E7',
+  ref: "A1:E7",
   rules: [
     {
-      type: 'expression',
+      type: "expression",
       priority: 3,
-      formulae: ['MOD(ROW()+COLUMN(),2)=0'],
-      style: {font: {bold: true}},
+      formulae: ["MOD(ROW()+COLUMN(),2)=0"],
+      style: { font: { bold: true } },
     },
   ],
 });
 
 // testing priority
 expressionWS.addConditionalFormatting({
-  ref: 'A2',
+  ref: "A2",
   rules: [
     {
-      type: 'expression',
+      type: "expression",
       priority: 1,
-      formulae: ['TRUE'],
+      formulae: ["TRUE"],
       style: {
-        fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FF00FF00'}},
+        fill: {
+          type: "pattern",
+          pattern: "solid",
+          bgColor: { argb: "FF00FF00" },
+        },
       },
     },
     {
-      type: 'expression',
+      type: "expression",
       priority: 2,
-      formulae: ['TRUE'],
+      formulae: ["TRUE"],
       style: {
-        fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FFFF0000'}},
+        fill: {
+          type: "pattern",
+          pattern: "solid",
+          bgColor: { argb: "FFFF0000" },
+        },
       },
     },
   ],
@@ -97,18 +105,22 @@ expressionWS.addConditionalFormatting({
 
 // ============================================================================
 // Highlight Cells
-const highlightWS = wb.addWorksheet('Highlight');
+const highlightWS = wb.addWorksheet("Highlight");
 
-addTable(highlightWS, 'A1:E7');
+addTable(highlightWS, "A1:E7");
 highlightWS.addConditionalFormatting({
-  ref: 'A1:E7',
+  ref: "A1:E7",
   rules: [
     {
-      type: 'cellIs',
-      operator: 'greaterThan',
+      type: "cellIs",
+      operator: "greaterThan",
       formulae: [13],
       style: {
-        fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FF00FF00'}},
+        fill: {
+          type: "pattern",
+          pattern: "solid",
+          bgColor: { argb: "FF00FF00" },
+        },
       },
     },
   ],
@@ -116,178 +128,182 @@ highlightWS.addConditionalFormatting({
 
 // ============================================================================
 // Top 10% (and bottom)
-const top10pcWS = wb.addWorksheet('Top 10%');
+const top10pcWS = wb.addWorksheet("Top 10%");
 
-addTable(top10pcWS, 'A1:E7');
+addTable(top10pcWS, "A1:E7");
 top10pcWS.addConditionalFormatting({
-  ref: 'A1:E7',
+  ref: "A1:E7",
   rules: [
     {
-      type: 'top10',
+      type: "top10",
       percent: true,
       rank: 10,
-      style: {font: {bold: true}},
+      style: { font: { bold: true } },
     },
     {
-      type: 'top10',
+      type: "top10",
       percent: true,
       bottom: true,
       rank: 10,
-      style: {font: {italic: true}},
+      style: { font: { italic: true } },
     },
   ],
 });
 
 // top and bottom 8
-addTable(top10pcWS, 'G1:K7');
+addTable(top10pcWS, "G1:K7");
 top10pcWS.addConditionalFormatting({
-  ref: 'G1:K7',
+  ref: "G1:K7",
   rules: [
     {
-      type: 'top10',
+      type: "top10",
       percent: false,
       rank: 8,
-      style: {font: {bold: true}},
+      style: { font: { bold: true } },
     },
     {
-      type: 'top10',
+      type: "top10",
       percent: false,
       bottom: true,
       rank: 8,
-      style: {font: {italic: true}},
+      style: { font: { italic: true } },
     },
   ],
 });
 
 // above and below average
-addTable(top10pcWS, 'M1:Q7');
+addTable(top10pcWS, "M1:Q7");
 top10pcWS.addConditionalFormatting({
-  ref: 'M1:Q7',
+  ref: "M1:Q7",
   rules: [
     {
-      type: 'aboveAverage',
-      style: {font: {bold: true}},
+      type: "aboveAverage",
+      style: { font: { bold: true } },
     },
     {
-      type: 'aboveAverage',
+      type: "aboveAverage",
       aboveAverage: false,
-      style: {font: {italic: true}},
+      style: { font: { italic: true } },
     },
   ],
 });
 
 // ============================================================================
 // Colour Scales
-const colourScaleWS = wb.addWorksheet('Colour Scales');
+const colourScaleWS = wb.addWorksheet("Colour Scales");
 
-addTable(colourScaleWS, 'A1:E7');
+addTable(colourScaleWS, "A1:E7");
 colourScaleWS.addConditionalFormatting({
-  ref: 'A1:E7',
+  ref: "A1:E7",
   rules: [
     {
-      type: 'colorScale',
-      cfvo: [{type: 'min'}, {type: 'percentile', value: 50}, {type: 'max'}],
-      color: [{argb: 'FFF8696B'}, {argb: 'FFFFEB84'}, {argb: 'FF63BE7B'}],
+      type: "colorScale",
+      cfvo: [
+        { type: "min" },
+        { type: "percentile", value: 50 },
+        { type: "max" },
+      ],
+      color: [{ argb: "FFF8696B" }, { argb: "FFFFEB84" }, { argb: "FF63BE7B" }],
     },
   ],
 });
 
 // top and bottom 8
-addTable(colourScaleWS, 'G1:K7');
+addTable(colourScaleWS, "G1:K7");
 colourScaleWS.addConditionalFormatting({
-  ref: 'G1:K7',
+  ref: "G1:K7",
   rules: [
     {
-      type: 'colorScale',
-      cfvo: [{type: 'min'}, {type: 'max'}],
-      color: [{argb: 'FFF8696B'}, {argb: 'FFFCFCFF'}],
+      type: "colorScale",
+      cfvo: [{ type: "min" }, { type: "max" }],
+      color: [{ argb: "FFF8696B" }, { argb: "FFFCFCFF" }],
     },
   ],
 });
 
 // ============================================================================
 // Arrows
-const arrowsWS = wb.addWorksheet('Arrows');
+const arrowsWS = wb.addWorksheet("Arrows");
 
-addTable(arrowsWS, 'A1:E7');
+addTable(arrowsWS, "A1:E7");
 arrowsWS.addConditionalFormatting({
-  ref: 'A1:E7',
+  ref: "A1:E7",
   rules: [
     {
-      type: 'iconSet',
-      iconSet: '3Arrows',
+      type: "iconSet",
+      iconSet: "3Arrows",
       cfvo: [
-        {type: 'percent', value: 0},
-        {type: 'percent', value: 33},
-        {type: 'percent', value: 66},
+        { type: "percent", value: 0 },
+        { type: "percent", value: 33 },
+        { type: "percent", value: 66 },
       ],
     },
   ],
 });
 
-addTable(arrowsWS, 'G1:K7');
+addTable(arrowsWS, "G1:K7");
 arrowsWS.addConditionalFormatting({
-  ref: 'G1:K7',
+  ref: "G1:K7",
   rules: [
     {
-      type: 'iconSet',
-      iconSet: '4Arrows',
+      type: "iconSet",
+      iconSet: "4Arrows",
       cfvo: [
-        {type: 'percent', value: 0},
-        {type: 'percent', value: 25},
-        {type: 'percent', value: 50},
-        {type: 'percent', value: 75},
+        { type: "percent", value: 0 },
+        { type: "percent", value: 25 },
+        { type: "percent", value: 50 },
+        { type: "percent", value: 75 },
       ],
     },
   ],
 });
 
-addTable(arrowsWS, 'M1:Q7');
+addTable(arrowsWS, "M1:Q7");
 arrowsWS.addConditionalFormatting({
-  ref: 'M1:Q7',
+  ref: "M1:Q7",
   rules: [
     {
-      type: 'iconSet',
-      iconSet: '5Arrows',
+      type: "iconSet",
+      iconSet: "5Arrows",
       cfvo: [
-        {type: 'percent', value: 0},
-        {type: 'percent', value: 20},
-        {type: 'percent', value: 40},
-        {type: 'percent', value: 60},
-        {type: 'percent', value: 80},
+        { type: "percent", value: 0 },
+        { type: "percent", value: 20 },
+        { type: "percent", value: 40 },
+        { type: "percent", value: 60 },
+        { type: "percent", value: 80 },
       ],
     },
   ],
 });
 
-addTable(arrowsWS, 'A9:E15');
+addTable(arrowsWS, "A9:E15");
 arrowsWS.addConditionalFormatting({
-  ref: 'A9:E15',
+  ref: "A9:E15",
   rules: [
     {
-      type: 'iconSet',
-      iconSet: '4ArrowsGray',
+      type: "iconSet",
+      iconSet: "4ArrowsGray",
       cfvo: [
-        {type: 'percent', value: 0},
-        {type: 'percent', value: 25},
-        {type: 'percent', value: 50},
-        {type: 'percent', value: 75},
+        { type: "percent", value: 0 },
+        { type: "percent", value: 25 },
+        { type: "percent", value: 50 },
+        { type: "percent", value: 75 },
       ],
     },
   ],
 });
 
-addTable(arrowsWS, 'G9:K15');
+addTable(arrowsWS, "G9:K15");
 arrowsWS.addConditionalFormatting({
-  ref: 'G9:K15',
+  ref: "G9:K15",
   rules: [
     {
-      type: 'iconSet',
-      iconSet: '3TrafficLights',
+      type: "iconSet",
+      iconSet: "3TrafficLights",
       cfvo: [
-        {type: 'percent', value: 0},
-        {type: 'num', value: 'COLUMN()'},
-        {type: 'num', value: 'ROW()'},
+        { type: "percent", value: 0 },
+        { type: "num", value: "COLUMN()" },
+        { type: "num", value: "ROW()" },
       ],
     },
   ],
@@ -295,71 +311,71 @@ arrowsWS.addConditionalFormatting({
 
 // ============================================================================
 // Shapes
-const shapesWS = wb.addWorksheet('Shapes');
+const shapesWS = wb.addWorksheet("Shapes");
 
-addTable(shapesWS, 'A1:E7');
+addTable(shapesWS, "A1:E7");
 shapesWS.addConditionalFormatting({
-  ref: 'A1:E7',
+  ref: "A1:E7",
   rules: [
     {
-      type: 'iconSet',
-      iconSet: '3TrafficLights',
+      type: "iconSet",
+      iconSet: "3TrafficLights",
       cfvo: [
-        {type: 'percent', value: 0},
-        {type: 'percent', value: 33},
-        {type: 'percent', value: 67},
+        { type: "percent", value: 0 },
+        { type: "percent", value: 33 },
+        { type: "percent", value: 67 },
       ],
     },
   ],
 });
 
-addTable(shapesWS, 'G1:K6');
+addTable(shapesWS, "G1:K6");
 shapesWS.addConditionalFormatting({
-  ref: 'G1:K6',
+  ref: "G1:K6",
   rules: [
     {
-      type: 'iconSet',
-      iconSet: '5Quarters',
+      type: "iconSet",
+      iconSet: "5Quarters",
       cfvo: [
-        {type: 'percent', value: 0},
-        {type: 'percent', value: 20},
-        {type: 'percent', value: 40},
-        {type: 'percent', value: 60},
-        {type: 'percent', value: 80},
+        { type: "percent", value: 0 },
+        { type: "percent", value: 20 },
+        { type: "percent", value: 40 },
+        { type: "percent", value: 60 },
+        { type: "percent", value: 80 },
       ],
     },
   ],
 });
 
-addTable(shapesWS, 'M1:Q7');
+addTable(shapesWS, "M1:Q7");
 shapesWS.addConditionalFormatting({
-  ref: 'M1:Q7',
+  ref: "M1:Q7",
   rules: [
     {
-      type: 'iconSet',
-      iconSet: '3TrafficLights',
+      type: "iconSet",
+      iconSet: "3TrafficLights",
       showValue: false,
       cfvo: [
-        {type: 'percent', value: 0},
-        {type: 'percent', value: 33},
-        {type: 'percent', value: 67},
+        { type: "percent", value: 0 },
+        { type: "percent", value: 33 },
+        { type: "percent", value: 67 },
       ],
     },
   ],
 });
 
-addTable(shapesWS, 'A9:E15');
+addTable(shapesWS, "A9:E15");
 shapesWS.addConditionalFormatting({
-  ref: 'A9:E15',
+  ref: "A9:E15",
   rules: [
     {
-      type: 'iconSet',
-      iconSet: '3TrafficLights',
+      type: "iconSet",
+      iconSet: "3TrafficLights",
       reverse: true,
       cfvo: [
-        {type: 'percent', value: 0},
-        {type: 'percent', value: 33},
-        {type: 'percent', value: 67},
+        { type: "percent", value: 0 },
+        { type: "percent", value: 33 },
+        { type: "percent", value: 67 },
       ],
     },
   ],
@@ -367,53 +383,53 @@ shapesWS.addConditionalFormatting({
 
 // ============================================================================
 // Shapes
-const extSshapesWS = wb.addWorksheet('Ext Shapes');
+const extSshapesWS = wb.addWorksheet("Ext Shapes");
 
-addTable(extSshapesWS, 'A1:E7');
+addTable(extSshapesWS, "A1:E7");
 extSshapesWS.addConditionalFormatting({
-  ref: 'A1:E7',
+  ref: "A1:E7",
   rules: [
     {
-      type: 'iconSet',
-      iconSet: '3Stars',
+      type: "iconSet",
+      iconSet: "3Stars",
       cfvo: [
-        {type: 'percent', value: 0},
-        {type: 'percent', value: 33},
-        {type: 'percent', value: 67},
+        { type: "percent", value: 0 },
+        { type: "percent", value: 33 },
+        { type: "percent", value: 67 },
       ],
     },
   ],
 });
 
-addTable(extSshapesWS, 'G1:K7');
+addTable(extSshapesWS, "G1:K7");
 extSshapesWS.addConditionalFormatting({
-  ref: 'G1:K7',
+  ref: "G1:K7",
   rules: [
     {
-      type: 'iconSet',
-      iconSet: '3Triangles',
+      type: "iconSet",
+      iconSet: "3Triangles",
       cfvo: [
-        {type: 'percent', value: 0},
-        {type: 'percent', value: 33},
-        {type: 'percent', value: 67},
+        { type: "percent", value: 0 },
+        { type: "percent", value: 33 },
+        { type: "percent", value: 67 },
       ],
     },
   ],
 });
 
-addTable(extSshapesWS, 'M1:Q7');
+addTable(extSshapesWS, "M1:Q7");
 extSshapesWS.addConditionalFormatting({
-  ref: 'M1:Q7',
+  ref: "M1:Q7",
   rules: [
     {
-      type: 'iconSet',
-      iconSet: '5Boxes',
+      type: "iconSet",
+      iconSet: "5Boxes",
       cfvo: [
-        {type: 'percent', value: 0},
-        {type: 'percent', value: 20},
-        {type: 'percent', value: 40},
-        {type: 'percent', value: 60},
-        {type: 'percent', value: 80},
+        { type: "percent", value: 0 },
+        { type: "percent", value: 20 },
+        { type: "percent", value: 40 },
+        { type: "percent", value: 60 },
+        { type: "percent", value: 80 },
       ],
     },
   ],
@@ -421,35 +437,35 @@ extSshapesWS.addConditionalFormatting({
 
 // ============================================================================
 // Databar
-const databarWS = wb.addWorksheet('Databar');
+const databarWS = wb.addWorksheet("Databar");
 
-addTable(databarWS, 'A1:E7');
+addTable(databarWS, "A1:E7");
 databarWS.addConditionalFormatting({
-  ref: 'A1:E7',
+  ref: "A1:E7",
   rules: [
     {
-      type: 'dataBar',
-      color: {argb: 'FFFF0000'},
+      type: "dataBar",
+      color: { argb: "FFFF0000" },
       gradient: true,
       cfvo: [
-        {type: 'num', value: 5},
-        {type: 'num', value: 20},
+        { type: "num", value: 5 },
+        { type: "num", value: 20 },
       ],
     },
   ],
 });
 
-addTable(databarWS, 'G1:K7');
+addTable(databarWS, "G1:K7");
 databarWS.addConditionalFormatting({
-  ref: 'G1:K7',
+  ref: "G1:K7",
   rules: [
     {
-      type: 'dataBar',
-      color: {argb: 'FF00FF00'},
+      type: "dataBar",
+      color: { argb: "FF00FF00" },
       gradient: false,
       cfvo: [
-        {type: 'num', value: 5},
-        {type: 'num', value: 20},
+        { type: "num", value: 5 },
+        { type: "num", value: 20 },
       ],
     },
   ],
@@ -457,109 +473,129 @@ databarWS.addConditionalFormatting({
 
 // ============================================================================
 // Cell Is
-const cellIsWS = wb.addWorksheet('Cell Is');
+const cellIsWS = wb.addWorksheet("Cell Is");
 
-addTable(cellIsWS, 'A1:E7');
+addTable(cellIsWS, "A1:E7");
 cellIsWS.addConditionalFormatting({
-  ref: 'A1:E7',
+  ref: "A1:E7",
   rules: [
     {
-      type: 'cellIs',
-      operator: 'equal',
+      type: "cellIs",
+      operator: "equal",
       formulae: [13],
-      style: {font: {bold: true}},
+      style: { font: { bold: true } },
     },
     {
-      type: 'cellIs',
-      operator: 'greaterThan',
+      type: "cellIs",
+      operator: "greaterThan",
       formulae: [22],
-      style: {font: {italic: true}},
+      style: { font: { italic: true } },
     },
     {
-      type: 'cellIs',
-      operator: 'lessThan',
+      type: "cellIs",
+      operator: "lessThan",
       formulae: [4],
-      style: {font: {underline: true}},
+      style: { font: { underline: true } },
     },
     {
-      type: 'cellIs',
-      operator: 'between',
+      type: "cellIs",
+      operator: "between",
       formulae: [16, 20],
-      style: {font: {strike: true}},
+      style: { font: { strike: true } },
     },
   ],
 });
 
 // ============================================================================
 // Contains
-const containsWS = wb.addWorksheet('Contains');
+const containsWS = wb.addWorksheet("Contains");
 
-addTable(containsWS, 'A1:E7');
+addTable(containsWS, "A1:E7");
 containsWS.addConditionalFormatting({
-  ref: 'A1:E7',
+  ref: "A1:E7",
   rules: [
     {
-      type: 'containsText',
-      operator: 'containsText',
-      text: 'sday',
+      type: "containsText",
+      operator: "containsText",
+      text: "sday",
       style: {
-        fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FF00FF00'}},
+        fill: {
+          type: "pattern",
+          pattern: "solid",
+          bgColor: { argb: "FF00FF00" },
+        },
       },
     },
   ],
 });
 
-addTable(containsWS, 'G1:K7');
+addTable(containsWS, "G1:K7");
 containsWS.addConditionalFormatting({
-  ref: 'G1:K7',
+  ref: "G1:K7",
   rules: [
     {
-      type: 'containsText',
-      operator: 'containsBlanks',
+      type: "containsText",
+      operator: "containsBlanks",
       style: {
-        fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FFFF0000'}},
+        fill: {
+          type: "pattern",
+          pattern: "solid",
+          bgColor: { argb: "FFFF0000" },
+        },
       },
     },
   ],
 });
 
-addTable(containsWS, 'M1:Q7');
+addTable(containsWS, "M1:Q7");
 containsWS.addConditionalFormatting({
-  ref: 'M1:Q7',
+  ref: "M1:Q7",
   rules: [
     {
-      type: 'containsText',
-      operator: 'notContainsBlanks',
+      type: "containsText",
+      operator: "notContainsBlanks",
       style: {
-        fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FF0000FF'}},
+        fill: {
+          type: "pattern",
+          pattern: "solid",
+          bgColor: { argb: "FF0000FF" },
+        },
       },
     },
   ],
 });
 
-addTable(containsWS, 'A9:E15');
+addTable(containsWS, "A9:E15");
 containsWS.addConditionalFormatting({
-  ref: 'A9:E15',
+  ref: "A9:E15",
   rules: [
     {
-      type: 'containsText',
-      operator: 'containsErrors',
+      type: "containsText",
+      operator: "containsErrors",
       style: {
-        fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FF00FF00'}},
+        fill: {
+          type: "pattern",
+          pattern: "solid",
+          bgColor: { argb: "FF00FF00" },
+        },
       },
     },
   ],
 });
 
-addTable(containsWS, 'G9:K15');
+addTable(containsWS, "G9:K15");
 containsWS.addConditionalFormatting({
-  ref: 'G9:K15',
+  ref: "G9:K15",
   rules: [
     {
-      type: 'containsText',
-      operator: 'notContainsErrors',
+      type: "containsText",
+      operator: "notContainsErrors",
       style: {
-        fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FFFF0000'}},
+        fill: {
+          type: "pattern",
+          pattern: "solid",
+          bgColor: { argb: "FFFF0000" },
+        },
       },
     },
   ],
@@ -567,78 +603,98 @@ containsWS.addConditionalFormatting({
 
 // ============================================================================
 // Dates
-const dateWS = wb.addWorksheet('Dates');
+const dateWS = wb.addWorksheet("Dates");
 
-addDateTable(dateWS, 'A1:G10');
+addDateTable(dateWS, "A1:G10");
 dateWS.addConditionalFormatting({
-  ref: 'A1:G10',
+  ref: "A1:G10",
   rules: [
     {
-      type: 'timePeriod',
-      timePeriod: 'lastWeek',
+      type: "timePeriod",
+      timePeriod: "lastWeek",
       style: {
-        fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FFFF0000'}},
+        fill: {
+          type: "pattern",
+          pattern: "solid",
+          bgColor: { argb: "FFFF0000" },
+        },
       },
     },
     {
-      type: 'timePeriod',
-      timePeriod: 'thisWeek',
+      type: "timePeriod",
+      timePeriod: "thisWeek",
       style: {
-        fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FF00FF00'}},
+        fill: {
+          type: "pattern",
+          pattern: "solid",
+          bgColor: { argb: "FF00FF00" },
+        },
       },
     },
     {
-      type: 'timePeriod',
-      timePeriod: 'nextWeek',
+      type: "timePeriod",
+      timePeriod: "nextWeek",
       style: {
-        fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FF0000FF'}},
+        fill: {
+          type: "pattern",
+          pattern: "solid",
+          bgColor: { argb: "FF0000FF" },
+        },
       },
     },
     {
-      type: 'timePeriod',
-      timePeriod: 'yesterday',
-      style: {font: {italic: true}},
+      type: "timePeriod",
+      timePeriod: "yesterday",
+      style: { font: { italic: true } },
     },
     {
-      type: 'timePeriod',
-      timePeriod: 'today',
-      style: {font: {bold: true}},
+      type: "timePeriod",
+      timePeriod: "today",
+      style: { font: { bold: true } },
     },
     {
-      type: 'timePeriod',
-      timePeriod: 'tomorrow',
-      style: {font: {underline: true}},
+      type: "timePeriod",
+      timePeriod: "tomorrow",
+      style: { font: { underline: true } },
     },
     {
-      type: 'timePeriod',
-      timePeriod: 'last7Days',
-      style: {font: {strike: true}},
+      type: "timePeriod",
+      timePeriod: "last7Days",
+      style: { font: { strike: true } },
     },
     {
-      type: 'timePeriod',
-      timePeriod: 'lastMonth',
+      type: "timePeriod",
+      timePeriod: "lastMonth",
       style: {
-        fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FFFFFF00'}},
+        fill: {
+          type: "pattern",
+          pattern: "solid",
+          bgColor: { argb: "FFFFFF00" },
+        },
       },
     },
     {
-      type: 'timePeriod',
-      timePeriod: 'thisMonth',
+      type: "timePeriod",
+      timePeriod: "thisMonth",
       style: {
         font: {
-          name: 'Comic Sans MS',
+          name: "Comic Sans MS",
           family: 4,
           size: 16,
-          underline: 'double',
+          underline: "double",
           bold: true,
         },
       },
     },
     {
-      type: 'timePeriod',
-      timePeriod: 'nextMonth',
+      type: "timePeriod",
+      timePeriod: "nextMonth",
       style: {
-        fill: {type: 'pattern', pattern: 'solid', bgColor: {argb: 'FF00FFFF'}},
+        fill: {
+          type: "pattern",
+          pattern: "solid",
+          bgColor: { argb: "FF00FFFF" },
+        },
       },
     },
   ],
@@ -653,8 +709,8 @@ wb.xlsx
   .writeFile(filename)
   .then(() => {
     const micros = stopwatch.microseconds;
-    console.log('Done.');
-    console.log('Time taken:', micros);
+    console.log("Done.");
+    console.log("Time taken:", micros);
   })
   .catch((error) => {
     console.log(error.message);
